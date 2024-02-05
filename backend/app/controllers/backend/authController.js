@@ -15,7 +15,7 @@ const auth = {
     users.save();
 
     res.send({
-        success: "Data upload"
+      success: "Data upload",
     });
   },
 };

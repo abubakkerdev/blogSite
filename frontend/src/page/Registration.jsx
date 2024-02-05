@@ -1,15 +1,66 @@
+import axios from "axios";
+import { useState } from "react";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { Link } from "react-router-dom";
-import { IoMdEyeOff, IoMdEye } from "react-icons/io";
-import { Blocks } from "react-loader-spinner";
 
 const Registration = () => {
+  const [uname, setUname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [image, setImage] = useState("");
+  const [error, setError] = useState({});
+
+  const handleSubmit = () => {
+    console.log(uname, email, password, image);
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "http://localhost:1010/api/v1/backend/auth/register",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: {
+        uname,
+        email,
+        password,
+        image_upload: image,
+      },
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        // console.log(response.data);
+
+        if ("error" in response.data) {
+          if ("email" in response.data.error) {
+            setError({ email: response.data.error.email });
+          } else if ("uname" in response.data.error) {
+            setError({ uname: response.data.error.uname });
+          } else if ("password" in response.data.error) {
+            setError({ password: response.data.error.password });
+          } else if ("image" in response.data.error) {
+            setError({ image: response.data.error.image });
+          }
+        } else if ("success" in response.data) {
+          setUname("");
+          setPassword("");
+          setEmail("");
+          setImage("");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <div className='bg-[url("/bg.svg")] bg-cover bg-center h-screen flex items-center px-3'>
       <div className="h-[90%] w-[1320px] mx-auto flex justify-center bg-white bg-opacity-5 rounded-xl shadow-md backdrop-blur-md overflow-hidden">
         <div className="w-1/2 hidden md:block bg-[url('/rgbg.webp')] bg-cover bg-center h-full"></div>
-        <div className="md:w-1/2  h-full flex flex-col justify-center md:items-end items-center md:pr-16 lg:pr-40">
-          <h1 className="md:text-3xl text-2xl text-center md:text-right font-bold text-white">
+        <div className="flex flex-col items-center justify-center h-full md:w-1/2 md:items-end md:pr-16 lg:pr-40">
+          <h1 className="text-2xl font-bold text-center text-white md:text-3xl md:text-right">
             Get started with easily register
           </h1>
           <p className="text-base text-[#ddd] mt-1 mb-6">
@@ -17,65 +68,90 @@ const Registration = () => {
           </p>
           <div className="flex flex-col gap-y-6">
             <div className="relative">
-              <fieldset className="border border-white/75 pb-2 px-2">
+              <fieldset className="px-2 pb-2 border border-white/75">
                 <legend className="px-2 text-xs text-white/70">
                   Email Address
                 </legend>
                 <input
-                  className="bg-transparent ring-0 border-0 outline-none px-2 text-white"
+                  className="px-2 text-white bg-transparent border-0 outline-none ring-0"
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </fieldset>
-              <p className="absolute bottom-[-2px] right-0 translate-y-full text-xs text-red-500 font-semibold">
-                error show here
-              </p>
+
+              {error.email != "" && (
+                <p className="absolute bottom-[-2px] right-0 translate-y-full text-xs text-red-500 font-semibold">
+                  {error.email}
+                </p>
+              )}
             </div>
+
             <div className="relative">
-              <fieldset className="border border-white/75 pb-2 px-2">
+              <fieldset className="px-2 pb-2 border border-white/75">
                 <legend className="px-2 text-xs text-white/70">
                   Full name
                 </legend>
                 <input
-                  className="bg-transparent ring-0 border-0 outline-none px-2 text-white"
+                  className="px-2 text-white bg-transparent border-0 outline-none ring-0"
                   type="text"
+                  value={uname}
+                  onChange={(e) => setUname(e.target.value)}
                 />
               </fieldset>
-              <p className="absolute bottom-[-2px] right-0 translate-y-full text-xs text-red-500 font-semibold">
-                error show here
-              </p>
+
+              {error.uname != "" && (
+                <p className="absolute bottom-[-2px] right-0 translate-y-full text-xs text-red-500 font-semibold">
+                  {error.uname}
+                </p>
+              )}
             </div>
             <div className="relative">
-              <fieldset className="border border-white/75 pb-2 px-2 relative">
+              <fieldset className="relative px-2 pb-2 border border-white/75">
                 <legend className="px-2 text-xs text-white/70">Password</legend>
                 <input
-                  className="bg-transparent ring-0 border-0 outline-none px-2 text-white"
+                  className="px-2 text-white bg-transparent border-0 outline-none ring-0"
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
 
-              
-                  <IoMdEye
-                    onClick={() => setPasswordShow(!passwordShow)}
-                    className="absolute right-4 top-[5px] text-white/60 cursor-pointer"
-                  />
-               
-                  <IoMdEyeOff
-                    onClick={() => setPasswordShow(!passwordShow)}
-                    className="absolute right-4 top-[5px] text-white/60 cursor-pointer"
-                  />
-             
-              </fieldset>
-              <p className="absolute bottom-[-2px] right-0 translate-y-full text-xs text-red-500 font-semibold">
-                passworderr
-              </p>
-            </div>
-  
+                <IoMdEye className="absolute right-4 top-[5px] text-white/60 cursor-pointer" />
 
-              <input
-                className="py-3 bg-blue-400  w-full mt-5 mb-7 rounded cursor-pointer"
-                type="button"
-                value="Sign up"
-              />
-   
+                <IoMdEyeOff className="absolute right-4 top-[5px] text-white/60 cursor-pointer" />
+              </fieldset>
+
+              {error.password != "" && (
+                <p className="absolute bottom-[-2px] right-0 translate-y-full text-xs text-red-500 font-semibold">
+                  {error.password}
+                </p>
+              )}
+            </div>
+
+            <div className="relative">
+              <fieldset className="px-2 pb-2 border border-white/75">
+                <legend className="px-2 text-xs text-white/70">Photo</legend>
+                <input
+                  className="px-2 text-white bg-transparent border-0 outline-none ring-0"
+                  type="file"
+                  name="image_upload"
+                  onChange={(e) => setImage(e.target.files[0])}
+                />
+              </fieldset>
+
+              {error.image != "" && (
+                <p className="absolute bottom-[-2px] right-0 translate-y-full text-xs text-red-500 font-semibold">
+                  {error.image}
+                </p>
+              )}
+            </div>
+
+            <input
+              className="w-full py-3 mt-5 bg-blue-400 rounded cursor-pointer mb-7"
+              type="button"
+              value="Sign up"
+              onClick={handleSubmit}
+            />
           </div>
           <p className="text-base text-white/70">
             Already have an account ?{" "}
