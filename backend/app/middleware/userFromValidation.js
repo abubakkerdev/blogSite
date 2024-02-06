@@ -3,7 +3,11 @@ const fs = require("node:fs");
 const userFromValidation = (req, res, next) => {
   const { uname, email, password, image_upload } = req.body;
 
-  if (email == "" || uname == "" || password == "") {
+  if (
+    email == "" ||
+    uname == "" ||
+    (password == "" && req.file.filename != "")
+  ) {
     fs.unlinkSync("./public/images/" + req.file.filename);
   }
 

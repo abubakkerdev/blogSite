@@ -21,7 +21,7 @@ const userSchema = new Schema({
         require: true
     },
     emailVerified: {
-        type: String,
+        type: Boolean,
         default: false
     },
     created_at: {
