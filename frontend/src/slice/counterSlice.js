@@ -3,17 +3,16 @@ import { createSlice } from '@reduxjs/toolkit'
 export const userSlice = createSlice({
   name: 'counter',
   initialState: {
-    userInfo: 0
+    userInfo: localStorage.getItem("userInfo")? JSON.parse(localStorage.getItem("userInfo")) : "logout"
   },
   reducers: {
-    increment: state => {
-      state.userInfo += 1
+    userLoginInfo: (state, action) => {
+      state.userInfo  = action.payload
     },
-
   }
 })
 
 // Action creators are generated for each case reducer function
-export const { increment } = userSlice.actions
+export const { userLoginInfo } = userSlice.actions
 
 export default userSlice.reducer

@@ -1,3 +1,0 @@
-MAIL_USERNAME=abubakkerdev@gmail.com
-MAIL_PASSWORD=rhrmbsnmzogfidkq
-

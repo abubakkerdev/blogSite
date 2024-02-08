@@ -22,11 +22,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const { login, tokenCheck, loginPage } = require("../../../controllers/backend/authController");
+const { register, tokenCheck, loginPage, login } = require("../../../controllers/backend/authController");
 const userFromValidation = require("../../../middleware/userFromValidation");
 const _ = express.Router();
 
-_.post("/register", upload.single("image_upload"), userFromValidation, login);
+_.post("/register", upload.single("image_upload"), userFromValidation, register);
 _.get("/tokencheck/:id", tokenCheck);
 _.get("/loginpage", loginPage);
 _.post("/login", login);

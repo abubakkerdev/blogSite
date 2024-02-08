@@ -1,26 +1,42 @@
-import React from "react";
+
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+
+
+  let data = useSelector((e) => e.user.userInfo);
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    if (data === "logout") {
+      navigate("/");
+    }
+  }, [data]);
+
+  
+  
   return (
     <>
-      {/* navbar */}
+      {/* navbar */}  
 
-      <nav className="bg-slate-900 py-4">
-        <div className="max-w-screen-xl mx-auto flex justify-between items-center">
+      <nav className="py-4 bg-slate-900">
+        <div className="flex items-center justify-between max-w-screen-xl mx-auto">
           <div className="logo">
-            <a className="text-2xl text-white font-semibold font-sans" href="#">
+            <a className="font-sans text-2xl font-semibold text-white" href="#">
               Bloogish
             </a>
           </div>
           <div>
-            <input className="py-2 px-4 text-white rounded-lg bg-transparent border outline-none w-96" type="search" placeholder="Search any blog" />
+            <input className="px-4 py-2 text-white bg-transparent border rounded-lg outline-none w-96" type="search" placeholder="Search any blog" />
           </div>
           <div className="menu">
-            <ul className="flex gap-10 items-center">
+            <ul className="flex items-center gap-10">
               <li>
                 <a
                   href="#"
-                  className="text-base text-white/80 font-semibold font-sans"
+                  className="font-sans text-base font-semibold text-white/80"
                 >
                   Blog
                 </a>
@@ -28,7 +44,7 @@ const Home = () => {
               <li>
                 <a
                   href="#"
-                  className="text-base text-white/80 font-semibold font-sans"
+                  className="font-sans text-base font-semibold text-white/80"
                 >
                   Contact
                 </a>
@@ -43,9 +59,9 @@ const Home = () => {
       <div>
         <div>
           <section className="bg-white ">
-            <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
-              <div className="mx-auto max-w-screen-sm text-center lg:mb-16 mb-8">
-                <h2 className="mb-4 text-3xl lg:text-4xl tracking-tight font-extrabold text-gray-900 ">
+            <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
+              <div className="max-w-screen-sm mx-auto mb-8 text-center lg:mb-16">
+                <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 lg:text-4xl ">
                   Latest Blog
                 </h2>
                 <p className="font-light text-gray-500 sm:text-xl">
@@ -54,11 +70,11 @@ const Home = () => {
                 </p>
               </div>
               <div className="grid gap-8 lg:grid-cols-2">
-                <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md  ">
-                  <div className="flex justify-between items-center mb-5 text-gray-500">
+                <article className="p-6 bg-white border border-gray-200 rounded-lg shadow-md ">
+                  <div className="flex items-center justify-between mb-5 text-gray-500">
                     <span className="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded">
                       <svg
-                        className="mr-1 w-3 h-3"
+                        className="w-3 h-3 mr-1"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -72,9 +88,9 @@ const Home = () => {
                     </span>
                   </div>
 
-                  <div className="border p-4 my-4">
+                  <div className="p-4 my-4 border">
                     <img
-                      className="h-60 w-full object-cover"
+                      className="object-cover w-full h-60"
                       src="blog01.avif"
                       alt=""
                     />
@@ -89,10 +105,10 @@ const Home = () => {
                     influence both web designers and developers influence both
                     web designers and developers.
                   </p>
-                  <div className="flex justify-between items-center">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <img
-                        className="w-7 h-7 rounded-full"
+                        className="rounded-full w-7 h-7"
                         src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png"
                         alt="Jese Leos avatar"
                       />
@@ -100,11 +116,11 @@ const Home = () => {
                     </div>
                     <a
                       href="#"
-                      className="inline-flex items-center font-medium text-primary-600  hover:underline"
+                      className="inline-flex items-center font-medium text-primary-600 hover:underline"
                     >
                       Read more
                       <svg
-                        className="ml-2 w-4 h-4"
+                        className="w-4 h-4 ml-2"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -118,11 +134,11 @@ const Home = () => {
                     </a>
                   </div>
                 </article>
-                <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md  ">
-                  <div className="flex justify-between items-center mb-5 text-gray-500">
+                <article className="p-6 bg-white border border-gray-200 rounded-lg shadow-md ">
+                  <div className="flex items-center justify-between mb-5 text-gray-500">
                     <span className="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded">
                       <svg
-                        className="mr-1 w-3 h-3"
+                        className="w-3 h-3 mr-1"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -136,9 +152,9 @@ const Home = () => {
                     </span>
                   </div>
 
-                  <div className="border p-4 my-4">
+                  <div className="p-4 my-4 border">
                     <img
-                      className="h-60 w-full object-cover"
+                      className="object-cover w-full h-60"
                       src="blog01.avif"
                       alt=""
                     />
@@ -153,10 +169,10 @@ const Home = () => {
                     influence both web designers and developers influence both
                     web designers and developers.
                   </p>
-                  <div className="flex justify-between items-center">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <img
-                        className="w-7 h-7 rounded-full"
+                        className="rounded-full w-7 h-7"
                         src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png"
                         alt="Jese Leos avatar"
                       />
@@ -164,11 +180,11 @@ const Home = () => {
                     </div>
                     <a
                       href="#"
-                      className="inline-flex items-center font-medium text-primary-600  hover:underline"
+                      className="inline-flex items-center font-medium text-primary-600 hover:underline"
                     >
                       Read more
                       <svg
-                        className="ml-2 w-4 h-4"
+                        className="w-4 h-4 ml-2"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -182,11 +198,11 @@ const Home = () => {
                     </a>
                   </div>
                 </article>
-                <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md  ">
-                  <div className="flex justify-between items-center mb-5 text-gray-500">
+                <article className="p-6 bg-white border border-gray-200 rounded-lg shadow-md ">
+                  <div className="flex items-center justify-between mb-5 text-gray-500">
                     <span className="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded">
                       <svg
-                        className="mr-1 w-3 h-3"
+                        className="w-3 h-3 mr-1"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -200,9 +216,9 @@ const Home = () => {
                     </span>
                   </div>
 
-                  <div className="border p-4 my-4">
+                  <div className="p-4 my-4 border">
                     <img
-                      className="h-60 w-full object-cover"
+                      className="object-cover w-full h-60"
                       src="blog01.avif"
                       alt=""
                     />
@@ -217,10 +233,10 @@ const Home = () => {
                     influence both web designers and developers influence both
                     web designers and developers.
                   </p>
-                  <div className="flex justify-between items-center">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <img
-                        className="w-7 h-7 rounded-full"
+                        className="rounded-full w-7 h-7"
                         src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png"
                         alt="Jese Leos avatar"
                       />
@@ -228,11 +244,11 @@ const Home = () => {
                     </div>
                     <a
                       href="#"
-                      className="inline-flex items-center font-medium text-primary-600  hover:underline"
+                      className="inline-flex items-center font-medium text-primary-600 hover:underline"
                     >
                       Read more
                       <svg
-                        className="ml-2 w-4 h-4"
+                        className="w-4 h-4 ml-2"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -246,11 +262,11 @@ const Home = () => {
                     </a>
                   </div>
                 </article>
-                <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md  ">
-                  <div className="flex justify-between items-center mb-5 text-gray-500">
+                <article className="p-6 bg-white border border-gray-200 rounded-lg shadow-md ">
+                  <div className="flex items-center justify-between mb-5 text-gray-500">
                     <span className="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded">
                       <svg
-                        className="mr-1 w-3 h-3"
+                        className="w-3 h-3 mr-1"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -264,9 +280,9 @@ const Home = () => {
                     </span>
                   </div>
 
-                  <div className="border p-4 my-4">
+                  <div className="p-4 my-4 border">
                     <img
-                      className="h-60 w-full object-cover"
+                      className="object-cover w-full h-60"
                       src="blog01.avif"
                       alt=""
                     />
@@ -281,10 +297,10 @@ const Home = () => {
                     influence both web designers and developers influence both
                     web designers and developers.
                   </p>
-                  <div className="flex justify-between items-center">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <img
-                        className="w-7 h-7 rounded-full"
+                        className="rounded-full w-7 h-7"
                         src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png"
                         alt="Jese Leos avatar"
                       />
@@ -292,11 +308,11 @@ const Home = () => {
                     </div>
                     <a
                       href="#"
-                      className="inline-flex items-center font-medium text-primary-600  hover:underline"
+                      className="inline-flex items-center font-medium text-primary-600 hover:underline"
                     >
                       Read more
                       <svg
-                        className="ml-2 w-4 h-4"
+                        className="w-4 h-4 ml-2"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -310,11 +326,11 @@ const Home = () => {
                     </a>
                   </div>
                 </article>
-                <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md  ">
-                  <div className="flex justify-between items-center mb-5 text-gray-500">
+                <article className="p-6 bg-white border border-gray-200 rounded-lg shadow-md ">
+                  <div className="flex items-center justify-between mb-5 text-gray-500">
                     <span className="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded">
                       <svg
-                        className="mr-1 w-3 h-3"
+                        className="w-3 h-3 mr-1"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -328,9 +344,9 @@ const Home = () => {
                     </span>
                   </div>
 
-                  <div className="border p-4 my-4">
+                  <div className="p-4 my-4 border">
                     <img
-                      className="h-60 w-full object-cover"
+                      className="object-cover w-full h-60"
                       src="blog01.avif"
                       alt=""
                     />
@@ -345,10 +361,10 @@ const Home = () => {
                     influence both web designers and developers influence both
                     web designers and developers.
                   </p>
-                  <div className="flex justify-between items-center">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <img
-                        className="w-7 h-7 rounded-full"
+                        className="rounded-full w-7 h-7"
                         src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png"
                         alt="Jese Leos avatar"
                       />
@@ -356,11 +372,11 @@ const Home = () => {
                     </div>
                     <a
                       href="#"
-                      className="inline-flex items-center font-medium text-primary-600  hover:underline"
+                      className="inline-flex items-center font-medium text-primary-600 hover:underline"
                     >
                       Read more
                       <svg
-                        className="ml-2 w-4 h-4"
+                        className="w-4 h-4 ml-2"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -374,11 +390,11 @@ const Home = () => {
                     </a>
                   </div>
                 </article>
-                <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md  ">
-                  <div className="flex justify-between items-center mb-5 text-gray-500">
+                <article className="p-6 bg-white border border-gray-200 rounded-lg shadow-md ">
+                  <div className="flex items-center justify-between mb-5 text-gray-500">
                     <span className="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded">
                       <svg
-                        className="mr-1 w-3 h-3"
+                        className="w-3 h-3 mr-1"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -392,9 +408,9 @@ const Home = () => {
                     </span>
                   </div>
 
-                  <div className="border p-4 my-4">
+                  <div className="p-4 my-4 border">
                     <img
-                      className="h-60 w-full object-cover"
+                      className="object-cover w-full h-60"
                       src="blog01.avif"
                       alt=""
                     />
@@ -409,10 +425,10 @@ const Home = () => {
                     influence both web designers and developers influence both
                     web designers and developers.
                   </p>
-                  <div className="flex justify-between items-center">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <img
-                        className="w-7 h-7 rounded-full"
+                        className="rounded-full w-7 h-7"
                         src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png"
                         alt="Jese Leos avatar"
                       />
@@ -420,11 +436,11 @@ const Home = () => {
                     </div>
                     <a
                       href="#"
-                      className="inline-flex items-center font-medium text-primary-600  hover:underline"
+                      className="inline-flex items-center font-medium text-primary-600 hover:underline"
                     >
                       Read more
                       <svg
-                        className="ml-2 w-4 h-4"
+                        className="w-4 h-4 ml-2"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -447,7 +463,7 @@ const Home = () => {
       {/* footer */}
 
       <footer className="bg-white ">
-        <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
+        <div className="w-full max-w-screen-xl p-4 py-6 mx-auto lg:py-8">
           <div className="md:flex md:justify-between">
             <div className="mb-6 md:mb-0">
               <a href="#" className="flex items-center">
@@ -465,7 +481,7 @@ const Home = () => {
                 <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase ">
                   Resources
                 </h2>
-                <ul className="text-gray-500  font-medium">
+                <ul className="font-medium text-gray-500">
                   <li className="mb-4">
                     <a href="#" className="hover:underline">
                       CITI
@@ -482,7 +498,7 @@ const Home = () => {
                 <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase ">
                   Resources
                 </h2>
-                <ul className="text-gray-500  font-medium">
+                <ul className="font-medium text-gray-500">
                   <li className="mb-4">
                     <a href="#" className="hover:underline">
                       CITI
@@ -499,7 +515,7 @@ const Home = () => {
                 <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase ">
                   Resources
                 </h2>
-                <ul className="text-gray-500  font-medium">
+                <ul className="font-medium text-gray-500">
                   <li className="mb-4">
                     <a href="#" className="hover:underline">
                       CITI
@@ -514,7 +530,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <hr className="my-6 border-gray-200 sm:mx-auto  lg:my-8" />
+          <hr className="my-6 border-gray-200 sm:mx-auto lg:my-8" />
           <div className="sm:flex sm:items-center sm:justify-between">
             <span className="text-sm text-gray-500 sm:text-center ">
               © 2024{" "}
@@ -555,7 +571,7 @@ const Home = () => {
                 </svg>
                 <span className="sr-only">Discord community</span>
               </a>
-              <a href="#" className="text-gray-500 hover:text-gray-900  ms-5">
+              <a href="#" className="text-gray-500 hover:text-gray-900 ms-5">
                 <svg
                   className="w-4 h-4"
                   aria-hidden="true"
@@ -571,7 +587,7 @@ const Home = () => {
                 </svg>
                 <span className="sr-only">Twitter page</span>
               </a>
-              <a href="#" className="text-gray-500 hover:text-gray-900  ms-5">
+              <a href="#" className="text-gray-500 hover:text-gray-900 ms-5">
                 <svg
                   className="w-4 h-4"
                   aria-hidden="true"
@@ -587,7 +603,7 @@ const Home = () => {
                 </svg>
                 <span className="sr-only">GitHub account</span>
               </a>
-              <a href="#" className="text-gray-500 hover:text-gray-900  ms-5">
+              <a href="#" className="text-gray-500 hover:text-gray-900 ms-5">
                 <svg
                   className="w-4 h-4"
                   aria-hidden="true"

@@ -1,16 +1,40 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { socket } from '../socket/socket';
 
 const Blog = () => {
   let [like, setLike] = useState(false);
+
+  let data = useSelector((e) => e.user.userInfo);
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    if (data === "logout") {
+      navigate("/");
+    }
+  }, [data]);
+
+
+
+  useEffect(() => {
+
+    socket.emit("some", "some data show")
+    
+  }, [data])
+
+
+  
+
   return (
     <div>
       <div>
         <div>
           <section className="bg-white ">
-            <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
-              <div className="mx-auto max-w-screen-sm text-center lg:mb-16 mb-8">
-                <h2 className="mb-4 text-3xl lg:text-4xl tracking-tight font-extrabold text-gray-900 ">
+            <div className="max-w-screen-xl px-4 py-8 mx-auto lg:py-16 lg:px-6">
+              <div className="max-w-screen-sm mx-auto mb-8 text-center lg:mb-16">
+                <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 lg:text-4xl ">
                   Latest Blog
                 </h2>
                 <p className="font-light text-gray-500 sm:text-xl">
@@ -19,11 +43,11 @@ const Blog = () => {
                 </p>
               </div>
               <div className="grid gap-8 ">
-                <article className="p-6 bg-white rounded-lg border border-gray-200 shadow-md  ">
-                  <div className="flex justify-between items-center mb-5 text-gray-500">
+                <article className="p-6 bg-white border border-gray-200 rounded-lg shadow-md ">
+                  <div className="flex items-center justify-between mb-5 text-gray-500">
                     <span className="bg-primary-100 text-primary-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded">
                       <svg
-                        className="mr-1 w-3 h-3"
+                        className="w-3 h-3 mr-1"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +61,7 @@ const Blog = () => {
                     </span>
                   </div>
 
-                  <div className="border p-4 my-4">
+                  <div className="p-4 my-4 border">
                     <img
                       className="h-[600px] w-full object-cover"
                       src="blog01.avif"
@@ -64,7 +88,7 @@ const Blog = () => {
                     commodi aliquid? Explicabo voluptatem laudantium, rerum
                     consectetur officia accusantium sunt?
                   </p>
-                  <div className="flex justify-between items-center">
+                  <div className="flex items-center justify-between">
                     <div>
                       {like ? (
                         <AiOutlineLike
@@ -80,10 +104,10 @@ const Blog = () => {
                     </div>
                     <div>
                       <form>
-                        <label for="chat" className="sr-only">
+                        <label htmlFor="chat" className="sr-only">
                           Your message
                         </label>
-                        <div className="flex items-center  ">
+                        <div className="flex items-center ">
                           <textarea
                             id="chat"
                             rows="1"
@@ -92,7 +116,10 @@ const Blog = () => {
                           ></textarea>
                           <button
                             type="submit"
-                            className="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100  "
+                            className="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 "
+
+                          
+
                           >
                             <svg
                               className="w-5 h-5 rotate-90 rtl:-rotate-90"
@@ -110,6 +137,34 @@ const Blog = () => {
                     </div>
                   </div>
                 </article>
+
+                <div className="px-6 border border-slate-300 py-7 rounded-xl">
+                  <article>
+                    <div className="flex items-center mb-4">
+                      <img
+                        className="w-10 h-10 rounded-full me-4"
+                        src="rgbg.png"
+                        alt=""
+                      />
+                      <div className="font-medium ">
+                        <p>
+                          Jese Leos{" "}
+                          <time className="block text-sm text-gray-500 dark:text-gray-400">
+                            Active
+                          </time>
+                        </p>
+                      </div>
+                    </div>
+
+                    <p className="mb-2 text-gray-500 ">
+                      This is my third Invicta Pro Diver. They are just
+                      fantastic value for money. This one arrived yesterday and
+                      the first thing I did was set the time, popped on an
+                      identical strap from another Invicta and went in the
+                      shower with it to test the waterproofing.... No problems.
+                    </p>
+                  </article>
+                </div>
               </div>
             </div>
           </section>

@@ -1,11 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { userLoginInfo } from "../slice/counterSlice";
+import { useNavigate } from "react-router-dom";
+
 
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
+
+  let navigate = useNavigate();
+
+  let data = useSelector((e) => e.user.userInfo);
+
+  
+
+  useEffect(() => {
+
+    if (data != "logout") {
+      if (data.login) {
+        navigate("/home")
+      }
+    }
+
+    
+  }, [data])
+  
+  
+
   const handleLogin = () => {
     console.log(email, password);
 
@@ -25,7 +51,15 @@ const Login = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(response.data);
+
+        dispatch(userLoginInfo(
+          response.data.data
+        ))
+
+        localStorage.setItem("userInfo", JSON.stringify(response.data.data))
+
+        setEmail("");
+        setPassword("");
 
       })
       .catch((error) => {
