@@ -24,11 +24,8 @@ io.on("connection", (socket) => {
   workSocket(io, socket);
 });
 
-
 app.use(express.json());
 databaseConnect();
-
-
 
 app.use(route);
 

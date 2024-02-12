@@ -18,7 +18,6 @@ const Registration = () => {
     console.log(uname, email, password, image);
 
 
-
     let config = {
       method: "post",
       maxBodyLength: Infinity,

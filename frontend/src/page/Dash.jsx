@@ -1,20 +1,85 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Dash = () => {
-  let [show, setShow] = useState(true);
-
   let data = useSelector((e) => e.user.userInfo);
   let navigate = useNavigate();
+
+  let [show, setShow] = useState(true);
+  let [allBlog, setAllBlog] = useState([]);
+  let [image, setImage] = useState("");
+  let [title, setTitle] = useState("");
+  let [desc, setDesc] = useState("");
+  let [showPage, setShowPage] = useState({
+    add: false,
+    table: true,
+    edit: false,
+  });
+
+  const handlePost = () => {
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "http://localhost:1010/api/v1/backend/blog/create",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: {
+        title,
+        description: desc,
+        image_post: image,
+        authId: data.userId,
+      },
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response.data);
+
+        if ("success" in response.data) {
+          setTitle("");
+          setImage("");
+          setDesc("");
+          setShowPage({
+            add: false,
+            table: true,
+            edit: false,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: "http://localhost:1010/api/v1/backend/blog/all",
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        if ("data" in response.data) {
+          console.log(response.data.data);
+          setAllBlog(response.data.data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   useEffect(() => {
     if (data === "logout") {
       navigate("/");
     }
   }, [data]);
-
 
   return (
     <div>
@@ -43,7 +108,10 @@ const Dash = () => {
           href="#"
           className="flex items-center justify-center w-full h-16 text-xl font-bold text-gray-800 border-b"
         >
-          <img src={`http://localhost:1010/api/v1/images/${data.image}`} className="h-8" />
+          <img
+            src={`http://localhost:1010/api/v1/images/${data.image}`}
+            className="h-8"
+          />
         </a>
 
         {/* nav */}
@@ -61,10 +129,16 @@ const Dash = () => {
             Dashboard
           </a>
 
-          <a
-            onClick={() => setShow(true)}
-            href="#"
-            className={`flex items-center tracking-wide font-normal text-sm h-12  rounded-r-lg my-2  ${
+          <button
+            onClick={() =>
+              setShowPage({
+                add: true,
+                table: false,
+                edit: false,
+              })
+            }
+            type="button"
+            className={`flex w-full items-center tracking-wide font-normal text-sm h-12  rounded-r-lg my-2  ${
               show ? "bg-purple-700 shadow-xl text-white" : "text-gray-700"
             }`}
           >
@@ -76,12 +150,18 @@ const Dash = () => {
               <path d="m333.632812 416.425781c-2.6875 0-5.398437-.683593-7.894531-2.109375l-197.953125-112.855468c-7.679687-4.371094-10.34375-14.144532-5.972656-21.824219 4.351562-7.699219 14.125-10.367188 21.804688-5.972657l197.949218 112.851563c7.679688 4.375 10.347656 14.144531 5.976563 21.824219-2.945313 5.183594-8.363281 8.085937-13.910157 8.085937zm0 0" />
             </svg>
             Input
-          </a>
+          </button>
 
-          <a
-            onClick={() => setShow(false)}
-            href="#"
-            className={`flex items-center tracking-wide font-normal text-sm h-12  rounded-r-lg my-2  ${
+          <button
+            onClick={() =>
+              setShowPage({
+                add: false,
+                table: true,
+                edit: false,
+              })
+            }
+            type="button"
+            className={`flex w-full items-center tracking-wide font-normal text-sm h-12  rounded-r-lg my-2  ${
               show ? "text-gray-700" : "bg-purple-700 shadow-xl text-white"
             }`}
           >
@@ -91,12 +171,180 @@ const Dash = () => {
               <path d="m389.332031 362.667969h-213.332031c-20.585938 0-37.332031-16.746094-37.332031-37.335938v-64c0-8.832031 7.167969-16 16-16s16 7.167969 16 16v64c0 2.902344 2.429687 5.335938 5.332031 5.335938h213.332031c2.902344 0 5.335938-2.433594 5.335938-5.335938v-202.664062c0-2.902344-2.433594-5.335938-5.335938-5.335938h-128c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h128c20.589844 0 37.335938 16.746094 37.335938 37.335938v202.664062c0 20.589844-16.746094 37.335938-37.335938 37.335938zm0 0" />
             </svg>
             Output
-          </a>
+          </button>
         </div>
       </div>
 
       {/* body */}
-      {show ? (
+
+      {showPage.add && (
+        <div className="w-full min-h-screen pt-16 pl-64 bg-gray-100">
+          <div className="p-8 text-sm text-gray-800">
+            <div className="flex justify-between">
+              <h1 className="mb-8 text-4xl font-bold leading-none text-gray-700">
+                You can post your blog here...
+              </h1>
+              <Link to="/blog">See all blog</Link>
+            </div>
+
+            <table className="w-full text-left border shadow-sm">
+              <tr>
+                <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase w-28">
+                  Image
+                </th>
+                <td className="border">
+                  <label
+                    className="block w-full h-full p-3 pb-0 outline-none cursor-pointer "
+                    htmlFor="image"
+                  >
+                    Upload image...
+                  </label>
+                  <input
+                    id="image"
+                    name="image_post"
+                    onChange={(e) => setImage(e.target.files[0])}
+                    className="block w-full h-full p-3 pt-0 outline-none cursor-pointer "
+                    type="file"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase w-28">
+                  Title
+                </th>
+                <td className="border">
+                  <input
+                    className="w-full h-full p-3 bg-transparent outline-none"
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Blog title..."
+                  />
+                </td>
+              </tr>
+              <tr>
+                <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase w-28">
+                  Description
+                </th>
+                <td className="border">
+                  <textarea
+                    className="w-full h-40 p-3 bg-transparent outline-none"
+                    onChange={(e) => setDesc(e.target.value)}
+                    placeholder="Description..."
+                    cols="30"
+                    rows="10"
+                  >
+                    {desc}
+                  </textarea>
+                </td>
+              </tr>
+              <tr>
+                <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase w-28">
+                  Post
+                </th>
+                <td className="border ">
+                  <button
+                    onClick={handlePost}
+                    className="w-full h-full p-3 text-white bg-green-700 outline-none"
+                  >
+                    Post
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {showPage.table && (
+        <div className="w-full min-h-screen pt-16 pl-64 bg-gray-100">
+          <div className="p-8 text-sm text-gray-800">
+            <div className="flex justify-between">
+              <h1 className="mb-8 text-4xl font-bold leading-none text-gray-700">
+                Your blog here...
+              </h1>
+              <Link to="/blog">See all blog</Link>
+            </div>
+            <table className="w-full text-left border shadow-sm">
+              <thead>
+                <tr>
+                  <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase">
+                    No
+                  </th>
+                  <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase">
+                    Image
+                  </th>
+                  <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase">
+                    Title
+                  </th>
+                  <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase">
+                    Description
+                  </th>
+                  <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase">
+                    Like
+                  </th>
+                  <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase">
+                    Comment
+                  </th>
+
+                  <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase">
+                    <span>Edit</span>
+                  </th>
+                  <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase">
+                    Delete
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white border rounded">
+                {allBlog.length != 0 &&
+                  allBlog.map((el, index) => (
+                    <tr key={index}>
+                      <td className="p-3 border" width="50px">
+                        {index + 1}
+                      </td>
+                      <td className="p-3 border" width="250px">
+                        <img
+                          src={`http://localhost:1010/api/v1/images/${el.image}`}
+                          className="h-11"
+                        />
+                      </td>
+                      <td className="p-3 border" width="400px">
+                        {el.title}
+                      </td>
+                      <td className="p-3 border">
+                        {el.description.substr(0, 100)}...
+                      </td>
+                      <td className="p-3 border">5</td>
+                      <td className="p-3 border">6</td>
+
+                      <td className="border " width="100px">
+                        <button
+                          onClick={() => {
+                            setShowPage({
+                              add: false,
+                              table: false,
+                              edit: true,
+                            });
+                          }}
+                          className="w-full h-full p-3 text-white bg-gray-700 outline-none"
+                        >
+                          Edit
+                        </button>
+                      </td>
+                      <td className="border " width="100px">
+                        <button className="w-full h-full p-3 text-white bg-red-700 outline-none">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {showPage.edit && (
         <div className="w-full min-h-screen pt-16 pl-64 bg-gray-100">
           <div className="p-8 text-sm text-gray-800">
             <div className="flex justify-between">
@@ -154,72 +402,20 @@ const Dash = () => {
                   Post
                 </th>
                 <td className="border ">
-                  <button className="w-full h-full p-3 text-white bg-green-700 outline-none">
-                    Post
+                  <button
+                    onClick={() =>
+                      setShowPage({
+                        table: true,
+                        add: false,
+                        edit: false,
+                      })
+                    }
+                    className="w-full h-full p-3 text-white bg-green-700 outline-none"
+                  >
+                    Post Update
                   </button>
                 </td>
               </tr>
-            </table>
-          </div>
-        </div>
-      ) : (
-        <div className="w-full min-h-screen pt-16 pl-64 bg-gray-100">
-          <div className="p-8 text-sm text-gray-800">
-            <div className="flex justify-between">
-              <h1 className="mb-8 text-4xl font-bold leading-none text-gray-700">
-                Your blog here...
-              </h1>
-              <Link to="/blog">See all blog</Link>
-            </div>
-            <table className="w-full text-left border shadow-sm">
-              <thead>
-                <tr>
-                  <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase">
-                    No
-                  </th>
-                  <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase">
-                    Image
-                  </th>
-                  <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase">
-                    Title
-                  </th>
-                  <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase">
-                    Description
-                  </th>
-
-                  <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase">
-                    Edit
-                  </th>
-                  <th className="p-3 text-xs font-bold tracking-wide text-gray-900 uppercase">
-                    Delete
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white border rounded">
-                <tr>
-                  <td className="p-3 border" width="50px">
-                    01
-                  </td>
-                  <td className="p-3 border" width="250px">
-                    Image...
-                  </td>
-                  <td className="p-3 border" width="400px">
-                    Blog title
-                  </td>
-                  <td className="p-3 border">Description</td>
-
-                  <td className="border " width="100px">
-                    <button className="w-full h-full p-3 text-white bg-gray-700 outline-none">
-                      Edit
-                    </button>
-                  </td>
-                  <td className="border " width="100px">
-                    <button className="w-full h-full p-3 text-white bg-red-700 outline-none">
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
             </table>
           </div>
         </div>
