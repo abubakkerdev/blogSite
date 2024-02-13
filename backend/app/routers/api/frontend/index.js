@@ -1,8 +1,8 @@
 const express = require("express");
 const _ = express.Router();
+const blog = require("./blog")
 
-_.use("/backend", (req, res) => {
-  res.send("backend page");
-});
+
+_.use("/blog", blog);
 
 module.exports = _;

@@ -2,16 +2,20 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { socket } from "../socket/socket";
 
 const Dash = () => {
   let data = useSelector((e) => e.user.userInfo);
   let navigate = useNavigate();
 
   let [show, setShow] = useState(true);
+  let [realTime, setRealTime] = useState(false);
+  let [editBlog, setEditBlog] = useState();
   let [allBlog, setAllBlog] = useState([]);
   let [image, setImage] = useState("");
   let [title, setTitle] = useState("");
   let [desc, setDesc] = useState("");
+  let [descTwo, setDescTwo] = useState("");
   let [showPage, setShowPage] = useState({
     add: false,
     table: true,
@@ -48,12 +52,42 @@ const Dash = () => {
             table: true,
             edit: false,
           });
+          setRealTime(!realTime);
         }
       })
       .catch((error) => {
         console.log(error);
       });
   };
+
+  const handleDelete = (id) => {
+    socket.emit("blogDelete", id);
+    socket.on("deleteBlog", (blogData) => {
+      if (blogData._id) {
+        setAllBlog((allData) => {
+          let arr = [...allData];
+
+          let updateData = arr.filter((el) => el._id != blogData._id);
+
+          return updateData;
+        });
+      }
+    });
+  };
+
+  // edit blog code
+  const handleEditBlog = (id) => {
+    socket.emit("blogEdit", id);
+    socket.on("editBlog", (blogData) => {
+      if (blogData._id) {
+        setEditBlog(blogData);
+      }
+    });
+  };
+  const handlePostUpdate = () => {
+    console.log(descTwo);
+  };
+  // edit blog code
 
   useEffect(() => {
     let config = {
@@ -66,14 +100,13 @@ const Dash = () => {
       .request(config)
       .then((response) => {
         if ("data" in response.data) {
-          console.log(response.data.data);
           setAllBlog(response.data.data);
         }
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [realTime]);
 
   useEffect(() => {
     if (data === "logout") {
@@ -320,6 +353,7 @@ const Dash = () => {
                       <td className="border " width="100px">
                         <button
                           onClick={() => {
+                            handleEditBlog(el._id);
                             setShowPage({
                               add: false,
                               table: false,
@@ -332,7 +366,10 @@ const Dash = () => {
                         </button>
                       </td>
                       <td className="border " width="100px">
-                        <button className="w-full h-full p-3 text-white bg-red-700 outline-none">
+                        <button
+                          onClick={() => handleDelete(el._id)}
+                          className="w-full h-full p-3 text-white bg-red-700 outline-none"
+                        >
                           Delete
                         </button>
                       </td>
@@ -381,6 +418,7 @@ const Dash = () => {
                   <input
                     className="w-full h-full p-3 bg-transparent outline-none"
                     type="text"
+                    value={editBlog?.title}
                     placeholder="Blog title..."
                   />
                 </td>
@@ -390,11 +428,15 @@ const Dash = () => {
                   Description
                 </th>
                 <td className="border">
+                  {/* // edit blog code */}
                   <textarea
                     className="w-full h-40 p-3 bg-transparent outline-none"
-                    type="text"
-                    placeholder="Description..."
-                  />
+                    cols="30"
+                    onChange={(e) => setDescTwo(e.target.value)}
+                    rows="10"
+                    value={descTwo ? descTwo : editBlog?.description}
+                  ></textarea>
+                  {/* // edit blog code */}
                 </td>
               </tr>
               <tr>
@@ -403,13 +445,15 @@ const Dash = () => {
                 </th>
                 <td className="border ">
                   <button
-                    onClick={() =>
+                    onClick={() => {
                       setShowPage({
                         table: true,
                         add: false,
                         edit: false,
-                      })
-                    }
+                      });
+
+                      handlePostUpdate();
+                    }}
                     className="w-full h-full p-3 text-white bg-green-700 outline-none"
                   >
                     Post Update

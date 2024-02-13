@@ -7,13 +7,13 @@ import Registration from "./page/Registration";
 
 const App = () => {
   return (
-    <>
+    <> 
       <Routes>
         <Route path="/" index element={<Login />}></Route>
         <Route path="/home" element={<Home />}></Route>
         <Route path="/registration" element={<Registration />}></Route>
         <Route path="/dashboard" element={<Dash />}></Route>
-        <Route path="/blog" element={<Blog />}></Route>
+        <Route path="/blog/:id" element={<Blog />}></Route>
       </Routes>
     </>
   );
