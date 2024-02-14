@@ -38,9 +38,34 @@ const Blog = () => {
       });
   }, []);
 
-  useEffect(() => {
-    socket.emit("some", "some data show");
-  }, [data]);
+  const handleLike = (blogId) => {
+    socket.emit("blogLike", {
+      blogId,
+      authId: data.userId,
+    });
+
+    socket.on("likeBlog", (blogInfo) => {
+      if (blogInfo) {
+        // console.log("blogInfo", blogInfo);
+        // console.log("blogInfo", blogInfo.like.includes(data.authId));
+
+
+        setBlogInfo(blogInfo)
+
+                setLike(!like);
+        // if (blogInfo.like.includes(data.authId)) {
+        //   console.log("ok");
+  
+        // } else {
+        //   setLike(false);
+        //   console.log("err");
+        // }
+
+        
+      }
+    });
+  };
+
 
   return (
     <div>
@@ -93,16 +118,17 @@ const Blog = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       {like ? (
-                        <AiOutlineLike
-                          className="text-2xl cursor-pointer"
-                          onClick={() => setLike(!like)}
-                        />
-                      ) : (
                         <AiFillLike
                           className="text-2xl cursor-pointer"
-                          onClick={() => setLike(!like)}
+                          onClick={() => handleLike(blogInfo?._id)}
+                        />
+                      ) : (
+                        <AiOutlineLike
+                          className="text-2xl cursor-pointer"
+                          onClick={() => handleLike(blogInfo?._id)}
                         />
                       )}
+                      {blogInfo?.like.length}
                     </div>
                     <div>
                       <form>

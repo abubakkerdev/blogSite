@@ -11,7 +11,9 @@ const Dash = () => {
   let [show, setShow] = useState(true);
   let [realTime, setRealTime] = useState(false);
   let [editBlog, setEditBlog] = useState();
+  let [titleTwo, setTitleTwo] = useState("");
   let [allBlog, setAllBlog] = useState([]);
+  let [imageTwo, setImageTwo] = useState("");
   let [image, setImage] = useState("");
   let [title, setTitle] = useState("");
   let [desc, setDesc] = useState("");
@@ -74,7 +76,8 @@ const Dash = () => {
       }
     });
   };
-
+ 
+  
   // edit blog code
   const handleEditBlog = (id) => {
     socket.emit("blogEdit", id);
@@ -84,11 +87,75 @@ const Dash = () => {
       }
     });
   };
-  const handlePostUpdate = () => {
-    console.log(descTwo);
+
+  
+  const handlePostUpdate = (id) => {
+
+    
+    console.log(imageTwo, id, descTwo, titleTwo);
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "http://localhost:1010/api/v1/backend/blog/update",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: {
+        titleTwo,
+        descTwo,
+        photo_upload: imageTwo,
+        blogId: id,
+        image_name: editBlog?.image
+      },
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response.data.data);
+
+        if ("success" in response.data) {
+          
+          setTitleTwo("");
+          setImageTwo("");
+          setDescTwo("");
+
+          setShowPage({
+            add: false,
+            table: true,
+            edit: false,
+          });
+
+          setAllBlog((prev) => {
+            
+
+            let arr = [...prev];
+
+            let updateArr = arr.map((el) => {
+              if (el._id == response.data.data._id) {
+                  return {
+                    ...response.data.data
+                  }
+              }
+              return el
+            })
+
+            return updateArr;
+            
+          })
+
+
+          
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    
   };
   // edit blog code
 
+  
   useEffect(() => {
     let config = {
       method: "get",
@@ -397,6 +464,12 @@ const Dash = () => {
                   Image
                 </th>
                 <td className="border">
+
+                <img
+                          src={`http://localhost:1010/api/v1/images/${editBlog?.image}`}
+                          className="h-11"
+                        />
+                  
                   <label
                     className="block w-full h-full p-3 pb-0 outline-none cursor-pointer "
                     htmlFor="image"
@@ -407,6 +480,8 @@ const Dash = () => {
                     id="image"
                     className="block w-full h-full p-3 pt-0 outline-none cursor-pointer "
                     type="file"
+                    name="photo_upload"
+                    onChange={(e) => setImageTwo(e.target.files[0])}
                   />
                 </td>
               </tr>
@@ -418,7 +493,8 @@ const Dash = () => {
                   <input
                     className="w-full h-full p-3 bg-transparent outline-none"
                     type="text"
-                    value={editBlog?.title}
+                    onChange={(e) => setTitleTwo(e.target.value)}
+                    value={ titleTwo? titleTwo: editBlog?.title}
                     placeholder="Blog title..."
                   />
                 </td>
@@ -428,7 +504,7 @@ const Dash = () => {
                   Description
                 </th>
                 <td className="border">
-                  {/* // edit blog code */}
+                  {/* // edit blog code */}   
                   <textarea
                     className="w-full h-40 p-3 bg-transparent outline-none"
                     cols="30"
@@ -452,7 +528,7 @@ const Dash = () => {
                         edit: false,
                       });
 
-                      handlePostUpdate();
+                      handlePostUpdate(editBlog?._id);
                     }}
                     className="w-full h-full p-3 text-white bg-green-700 outline-none"
                   >

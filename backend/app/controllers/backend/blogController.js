@@ -1,4 +1,5 @@
 const blogPost = require("../../model/blogPost");
+const fs = require("node:fs");
 
 const blogController = {
   blogCreate(req, res) {
@@ -17,6 +18,34 @@ const blogController = {
       success: "blog create",
     });
   },
+
+  async blogUpdate(req, res) {
+    const { blogId, descTwo, image_name, titleTwo } = req.body;
+
+    if (image_name) {
+      fs.unlinkSync("./public/images/" + image_name);
+    }
+
+    const updateBlog = await blogPost.findByIdAndUpdate(
+      {
+        _id: blogId,
+      },
+      {
+        title: titleTwo,
+        description: descTwo,
+        image: req.file.filename,
+      },
+      {
+        new: true,
+      }
+    );
+
+    res.send({
+      success: "ok",
+      data: updateBlog,
+    });
+  },
+
   async blogAll(req, res) {
     const allBlog = await blogPost.find({});
 
@@ -34,8 +63,8 @@ const blogController = {
   },
   async homeBlog(req, res) {
     const allBlog = await blogPost.find({}).populate({
-        path: "authId",
-        select: "_id uname image"
+      path: "authId",
+      select: "_id uname image",
     });
 
     res.send({
@@ -46,14 +75,12 @@ const blogController = {
   async singleBlogs(req, res) {
     const { id } = req.params;
 
-    const allBlog = await blogPost.find({_id: id})
+    const allBlog = await blogPost.find({ _id: id });
 
     res.send({
       success: "ok",
       data: allBlog[0],
     });
-
-
   },
 };
 

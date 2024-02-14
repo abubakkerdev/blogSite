@@ -7,7 +7,7 @@ import Registration from "./page/Registration";
 
 const App = () => {
   return (
-    <> 
+    <>  
       <Routes>
         <Route path="/" index element={<Login />}></Route>
         <Route path="/home" element={<Home />}></Route>

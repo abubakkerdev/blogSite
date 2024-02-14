@@ -1,3 +1,4 @@
+
 const blogPost = require("../model/blogPost");
 const fs = require("node:fs");
 
@@ -6,14 +7,11 @@ const workSocket = (io, socket) => {
     console.log("show some thing", info);
   });
 
-  // edit blog code
-
   socket.on("blogEdit", async function (id) {
     let blog = await blogPost.find({ _id: id });
 
     socket.emit("editBlog", blog[0]);
   });
-  // edit blog code
 
   socket.on("blogDelete", async (id) => {
     // console.log(id);
@@ -27,6 +25,42 @@ const workSocket = (io, socket) => {
 
     console.log("obj", deleteBlog);
     socket.emit("deleteBlog", deleteBlog);
+  });
+
+  socket.on("blogLike", async (data) => {
+    let blog = await blogPost.find({ _id: data.blogId });
+
+    // console.log(data, blog[0].like.includes(data.authId));
+
+    if (blog[0].like.includes(data.authId)) {
+      let likeArr = [...blog[0].like];
+
+      likeArr.splice(likeArr.indexOf(data.authId), 1);
+
+      let blogUpdate = await blogPost.findByIdAndUpdate(
+        { _id: data.blogId },
+        {
+          like: likeArr,
+        },
+        { new: true }
+      );
+
+        socket.emit("likeBlog", blogUpdate)
+
+    } else {
+      let blogUpdate = await blogPost.findByIdAndUpdate(
+        { _id: data.blogId },
+        {
+          $push: {
+            like: data.authId,
+          },
+        },
+        { new: true }
+      );
+
+      socket.emit("likeBlog", blogUpdate)
+
+    }
   });
 };
 

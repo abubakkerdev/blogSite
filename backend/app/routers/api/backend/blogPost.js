@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
       .toLowerCase()
       .split(" ")
       .join("-");
-
+ 
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
 
     cb(null, fileName + uniqueSuffix + fileExt);
@@ -21,10 +21,11 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-const {blogCreate, blogAll, singleBlog} = require("../../../controllers/backend/blogController");
+const {blogCreate, blogAll, singleBlog, blogUpdate} = require("../../../controllers/backend/blogController");
 const _ = express.Router(); 
  
 _.post("/create", upload.single("image_post"), blogCreate);
+_.post("/update", upload.single("photo_upload"), blogUpdate);
 _.get("/all", blogAll);
 _.get("/singleblog/:id", singleBlog);
    

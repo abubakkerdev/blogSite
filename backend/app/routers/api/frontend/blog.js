@@ -5,5 +5,5 @@ const _ = express.Router();
  
 _.get("/all", homeBlog);
 _.get("/singleblogs/:id", singleBlogs);
-    
+     
 module.exports = _;
