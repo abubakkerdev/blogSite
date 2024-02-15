@@ -6,7 +6,7 @@ import Login from "./page/Login";
 import Registration from "./page/Registration";
 
 const App = () => {
-  return (
+  return ( 
     <>  
       <Routes>
         <Route path="/" index element={<Login />}></Route>

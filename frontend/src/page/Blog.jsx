@@ -8,6 +8,7 @@ import { socket } from "../socket/socket";
 const Blog = () => {
   let [like, setLike] = useState(false);
   let [blogInfo, setBlogInfo] = useState();
+  let [allComment, setAllComment] = useState([]);
   let { id } = useParams();
 
   let data = useSelector((e) => e.user.userInfo);
@@ -30,6 +31,9 @@ const Blog = () => {
       .request(config)
       .then((response) => {
         if ("success" in response.data) {
+
+          setAllComment(response.data.data.commentId);
+
           setBlogInfo(response.data.data);
         }
       })
@@ -65,6 +69,30 @@ const Blog = () => {
       }
     });
   };
+
+  let [comment, setComment] = useState("");
+
+  
+
+  const handleComment = () => { 
+    console.log("comment", comment, blogInfo?._id);
+
+    socket.emit("addComment", {
+      comment, 
+      authId: data.userId,
+      id: blogInfo?._id
+    })
+
+    socket.on("commentAdd", (data) => {
+      console.log(data);
+      if (data) {
+        setComment("");
+        setAllComment(data)
+      }
+    });
+
+
+   }
 
 
   return (
@@ -139,11 +167,14 @@ const Blog = () => {
                           <textarea
                             id="chat"
                             rows="1"
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
                             className="block mx-4 p-2.5 w-[350px] text-sm text-gray-900 outline-none bg-white rounded-lg border border-gray-300    "
                             placeholder="Your message..."
                           ></textarea>
                           <button
-                            type="submit"
+                            type="button"
+                            onClick={handleComment}
                             className="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 "
                           >
                             <svg
@@ -163,32 +194,38 @@ const Blog = () => {
                   </div>
                 </article>
 
-                <div className="px-6 border border-slate-300 py-7 rounded-xl">
-                  <article>
-                    <div className="flex items-center mb-4">
-                      <img
-                        className="w-10 h-10 rounded-full me-4"
-                        src="rgbg.png"
-                        alt=""
-                      />
-                      <div className="font-medium ">
-                        <p>
-                          Jese Leos{" "}
-                          <time className="block text-sm text-gray-500 dark:text-gray-400">
-                            Active
-                          </time>
-                        </p>
-                      </div>
-                    </div>
 
-                    <p className="mb-2 text-gray-500 ">
-                      This is my third Invicta Pro Diver. They are just
-                      fantastic value for money. This one arrived yesterday and
-                      the first thing I did was set the time, popped on an
-                      identical strap from another Invicta and went in the
-                      shower with it to test the waterproofing.... No problems.
-                    </p>
-                  </article>
+
+                <div className="px-6 border border-slate-300 py-7 rounded-xl">
+
+{allComment.length != 0 && allComment.map((el, index) => (
+         <article key={index}>
+         <div className="flex items-center mb-4">
+           <img
+             className="w-10 h-10 rounded-full me-4"
+             src={`http://localhost:1010/api/v1/images/${el.authId.image}`}
+             
+             alt=""
+           />
+           <div className="font-medium ">
+             <p>
+               {el.authId.uname}
+               <time className="block text-sm text-gray-500 dark:text-gray-400">
+                 Active
+               </time>
+             </p>
+           </div>
+         </div>
+
+         <p className="mb-2 text-gray-500 ">
+          {el.descripition}
+         </p>
+       </article>
+))}
+         
+
+
+
                 </div>
               </div>
             </div>

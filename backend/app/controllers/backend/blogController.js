@@ -75,7 +75,18 @@ const blogController = {
   async singleBlogs(req, res) {
     const { id } = req.params;
 
-    const allBlog = await blogPost.find({ _id: id });
+    const allBlog = await blogPost.find({ _id: id }).populate({
+      path: "commentId",
+      select: "_id descripition authId",
+
+      populate: {
+        path: "authId",
+        select: "_id uname image",
+
+      },
+    })
+    
+
 
     res.send({
       success: "ok",

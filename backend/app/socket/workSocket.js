@@ -1,6 +1,7 @@
 
 const blogPost = require("../model/blogPost");
 const fs = require("node:fs");
+const commentModel = require("../model/comment");
 
 const workSocket = (io, socket) => {
   socket.on("some", function (info) {
@@ -62,6 +63,37 @@ const workSocket = (io, socket) => {
 
     }
   });
+
+
+  socket.on("addComment", async ({comment,authId, id}) => {
+
+
+    const commentAdd = new commentModel({
+      descripition: comment,
+      authId,
+      postId: id,
+    })
+
+    commentAdd.save();
+
+
+    const updateBlog = await blogPost.findByIdAndUpdate({
+      _id: id
+    }, {
+      $push: {
+        commentId: commentAdd._id
+      }
+    });
+
+    const allComment = await commentModel.find({postId: id}).populate({path: "authId", select: "_id uname image"});
+
+    socket.emit("commentAdd", allComment);
+
+
+
+  });
+
+
 };
 
 module.exports = workSocket;
